@@ -5,6 +5,8 @@
 *.so
 *.dylib
 
+Shelob
+
 # Test binary, build with `go test -c`
 *.test
 
