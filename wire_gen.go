@@ -8,6 +8,7 @@ package main
 import (
 	"github.com/ZacharyGroff/Shelob/config"
 	"github.com/ZacharyGroff/Shelob/crawler"
+	"github.com/ZacharyGroff/Shelob/queue"
 	"github.com/ZacharyGroff/Shelob/scheduler"
 )
 
@@ -15,7 +16,8 @@ import (
 
 func InitializeShelob() crawler.Crawler {
 	configConfig := config.NewConfig()
-	schedulerScheduler := scheduler.NewScheduler(configConfig)
+	seedQueue := queue.NewSeedQueue()
+	schedulerScheduler := scheduler.NewScheduler(configConfig, seedQueue)
 	crawlerCrawler := crawler.NewCrawler(configConfig, schedulerScheduler)
 	return crawlerCrawler
 }
