@@ -1,8 +1,8 @@
 package queue
 
 import (
-	"log"
-	"time"
+	"errors"
+	"fmt"
 	"net/url"
 )
 
@@ -10,28 +10,29 @@ type SeedQueue struct {
 	seeds chan url.URL
 }
 
-func NewSeedQueue() *SeedQueue {
-	seeds := make(chan url.URL, 1000)
+func NewSeedQueue(buffer int) *SeedQueue {
+	seeds := make(chan url.URL, buffer)
 	return &SeedQueue{seeds}
 }
 
-func (q SeedQueue) Get() url.URL {
+func (q SeedQueue) Get() (url.URL, error) {
 	for {
 		select {
 		case url := <- q.seeds:
-			return url
+			return url, nil
 		default:
-			log.Print("No Urls in queue. Sleeping...\n")
-			time.Sleep(30 * time.Second)
+			err := errors.New("No Urls in queue.")
+			return url.URL{}, err
 		}
 	}
 }
 
-func (q SeedQueue) Put(url url.URL) {
+func (q SeedQueue) Put(url url.URL) error {
 	select {
 	case q.seeds <- url:
-		return
+		return nil
 	default:
-		log.Printf("No room in buffer. Discarding url: %+v\n", url)
+		err := fmt.Errorf("No room in buffer. Discarding url: %+v\n", url)
+		return err
 	}
 }
