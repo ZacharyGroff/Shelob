@@ -22,7 +22,7 @@ func (scheduler Scheduler) Start() {
 	log.Printf("Loading initial seeds...\n")
 	err := scheduler.LoadInitialSeeds()
 	if err != nil {
-		log.Fatalf("Failed to load initial seeds with error %s\n", error.Error)
+		log.Fatalf("Failed to load initial seeds with error %s\n", err.Error())
 	}
 }
 
