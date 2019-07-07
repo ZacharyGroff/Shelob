@@ -1,3 +1,4 @@
 {
 	"seedPath": "seeds.txt",
+	"seedBuffer": 1000
 }

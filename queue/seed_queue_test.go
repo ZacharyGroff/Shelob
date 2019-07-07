@@ -3,10 +3,12 @@ package queue
 import (
 	"testing"
 	"net/url"
+	"github.com/ZacharyGroff/Shelob/config"
 )
 
 func TestPutSuccess(t *testing.T) {
-	q := NewSeedQueue(1)
+	config := config.Config{"", 1}	
+	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 	err := q.Put(*url)
 	if err != nil {
@@ -15,7 +17,8 @@ func TestPutSuccess(t *testing.T) {
 }
 
 func TestPutError(t *testing.T) {
-	q := NewSeedQueue(0)
+	config := config.Config{"", 0}	
+	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 	err := q.Put(*url)
 	if err == nil {
@@ -25,7 +28,8 @@ func TestPutError(t *testing.T) {
 
 func TestGetSuccess(t *testing.T) {
 	expected, _ := url.Parse("test.com/")
-	q := NewSeedQueue(1)
+	config := config.Config{"", 1}	
+	q := NewSeedQueue(&config)
 	q.Put(*expected)
 
 	actual, _ := q.Get()
@@ -35,9 +39,8 @@ func TestGetSuccess(t *testing.T) {
 }
 
 func TestGetError(t *testing.T) {
-	q := NewSeedQueue(0)
-	url, _ := url.Parse("test.com/")
-	q.Put(*url)
+	config := config.Config{"", 0}	
+	q := NewSeedQueue(&config)
 
 	_, err := q.Get()
 	if err == nil {

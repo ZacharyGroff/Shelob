@@ -1,3 +1,4 @@
 {
-	"seedPath": "seedPathTest"
+	"seedPath": "seedPathTest",
+	"seedBuffer": 42
 }

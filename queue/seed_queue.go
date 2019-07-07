@@ -4,14 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"github.com/ZacharyGroff/Shelob/config"
 )
 
 type SeedQueue struct {
 	seeds chan url.URL
 }
 
-func NewSeedQueue(buffer int) *SeedQueue {
-	seeds := make(chan url.URL, buffer)
+func NewSeedQueue(config *config.Config) *SeedQueue {
+	seeds := make(chan url.URL, config.SeedBuffer)
 	return &SeedQueue{seeds}
 }
 

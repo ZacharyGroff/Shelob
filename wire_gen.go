@@ -16,7 +16,7 @@ import (
 
 func InitializeShelob() crawler.Crawler {
 	configConfig := config.NewConfig()
-	seedQueue := queue.NewSeedQueue()
+	seedQueue := queue.NewSeedQueue(configConfig)
 	schedulerScheduler := scheduler.NewScheduler(configConfig, seedQueue)
 	crawlerCrawler := crawler.NewCrawler(configConfig, schedulerScheduler)
 	return crawlerCrawler
