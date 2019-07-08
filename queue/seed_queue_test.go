@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"os"
 	"testing"
 	"net/url"
 	"github.com/ZacharyGroff/Shelob/config"
@@ -43,6 +44,61 @@ func TestGetError(t *testing.T) {
 	q := NewSeedQueue(&config)
 
 	_, err := q.Get()
+	if err == nil {
+		t.Error("Expected error but nil returned.")
+	}
+}
+
+func TestFlushSize(t *testing.T) {
+	testPath := "seed_test.txt"
+	os.Create(testPath)
+
+	config := config.Config{testPath, 1}
+	q := NewSeedQueue(&config)
+	url, _ := url.Parse("test.com/")
+
+	q.Put(*url)
+	q.Flush()
+	
+	expected := 0
+	actual := len(q.seeds)
+	if expected != actual {
+		os.Remove(testPath)
+		t.Errorf("Expected: %d\tActual: %d\n", expected, actual)	
+	}
+	
+}
+
+func TestFlushSuccess(t *testing.T) {
+	testPath := "seed_test.txt"
+	f, err := os.Create(testPath)
+	f.Close()
+
+	config := config.Config{testPath, 1}
+	q := NewSeedQueue(&config)
+	url, _ := url.Parse("test.com/")
+
+	q.Put(*url)
+	err = q.Flush()
+	
+	if err != nil {
+		os.Remove(testPath)
+		t.Errorf("Unexpected error returned: %s\n", err.Error())
+	}
+
+	os.Remove(testPath)
+}
+
+func TestFlushError(t *testing.T) {
+	testPath := "seed_test.txt"
+
+	config := config.Config{testPath, 1}
+	q := NewSeedQueue(&config)
+	url, _ := url.Parse("test.com/")
+
+	q.Put(*url)
+	err := q.Flush()
+	
 	if err == nil {
 		t.Error("Expected error but nil returned.")
 	}
