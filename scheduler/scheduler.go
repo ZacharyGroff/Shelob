@@ -20,13 +20,13 @@ func NewScheduler(c *config.Config, q queue.Queue) *Scheduler {
 
 func (scheduler Scheduler) Start() {
 	log.Printf("Loading initial seeds...\n")
-	err := scheduler.LoadInitialSeeds()
+	err := scheduler.loadInitialSeeds()
 	if err != nil {
 		log.Fatalf("Failed to load initial seeds with error %s\n", err.Error())
 	}
 }
 
-func (scheduler Scheduler) LoadInitialSeeds() error {
+func (scheduler Scheduler) loadInitialSeeds() error {
 	lines, err := getFileLines(scheduler.config.SeedPath)
 	if err != nil {
 		return err
