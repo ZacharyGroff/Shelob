@@ -11,10 +11,10 @@ import (
 
 type Scheduler struct {
 	config *config.Config
-	seedQueue *queue.SeedQueue
+	queue queue.Queue
 }
 
-func NewScheduler(c *config.Config, q *queue.SeedQueue) *Scheduler {
+func NewScheduler(c *config.Config, q queue.Queue) *Scheduler {
 	return &Scheduler{c, q}
 }
 
@@ -38,7 +38,7 @@ func (scheduler Scheduler) LoadInitialSeeds() error {
 	}
 
 	for _, seed := range initialSeeds {
-		scheduler.seedQueue.Put(seed)
+		scheduler.queue.Put(seed)
 	}
 
 	return nil
