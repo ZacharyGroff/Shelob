@@ -17,6 +17,7 @@ func NewCrawler(config *config.Config, scheduler *scheduler.Scheduler) Crawler {
 
 func (crawler Crawler) Start() {
 	log.Printf("Starting Shelob...\n")
+	crawler.scheduler.Start()
 }
 
 func (crawler Crawler) Stop() {

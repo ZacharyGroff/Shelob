@@ -5,7 +5,7 @@ import (
 	"os"
 	"bufio"
 	"io"
-	"fmt"
+	"time"
 	"net/url"
 	"net/http"
 	"github.com/ZacharyGroff/Shelob/config"
@@ -15,10 +15,10 @@ import (
 
 type Scheduler struct {
 	config *config.Config
-	queue *queue.Queue
+	queue queue.Queue
 }
 
-func NewScheduler(c *config.Config, q *queue.Queue) *Scheduler {
+func NewScheduler(c *config.Config, q *queue.SeedQueue) *Scheduler {
 	return &Scheduler{c, q}
 }
 
@@ -33,7 +33,7 @@ func (scheduler Scheduler) Start() {
 }
 
 func (scheduler Scheduler) Crawl() {
-	urlParser := parser.Parser{scheduler.Config}
+	urlParser := parser.NewParser(scheduler.config)
 	for {
 		seed, err := scheduler.queue.Get()
 		if err != nil {
@@ -43,12 +43,12 @@ func (scheduler Scheduler) Crawl() {
 		}
 		reader, err := download(seed)
 		if err != nil {
-			log.Println(err.Error)
+			log.Println(err.Error())
 			continue
 		}
 		childUrls, err := urlParser.Parse(reader)
 		if err != nil {
-			log.Println(err.Error)
+			log.Println(err.Error())
 			continue
 		}
 		for _, childUrl := range childUrls {

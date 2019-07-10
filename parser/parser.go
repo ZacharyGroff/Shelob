@@ -5,10 +5,15 @@ import (
 	"fmt"
 	"net/url"
 	"golang.org/x/net/html"	
+	"github.com/ZacharyGroff/Shelob/config"
 )
 
 type Parser struct {
-	config *config.Config
+	Config *config.Config
+}
+
+func NewParser(config *config.Config) *Parser {
+	return &Parser{config}
 }
 
 func (parser Parser) Parse(reader io.Reader) ([]url.URL, error) {
