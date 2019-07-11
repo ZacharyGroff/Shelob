@@ -1,4 +1,5 @@
 {
 	"seedPath": "seedPathTest",
-	"seedBuffer": 42
+	"seedBuffer": 42,
+	"sleepSeconds": 43
 }

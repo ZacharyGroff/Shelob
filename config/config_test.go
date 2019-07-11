@@ -26,3 +26,14 @@ func TestParseSeedBuffer(t *testing.T) {
 		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
 	}
 }
+
+func TestParseSleepSeconds(t *testing.T) {
+	config := Config{}
+	config.parseConfig("conf_test.json")
+	
+	expected := 43
+	actual := config.SleepSeconds
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
+	}
+}
