@@ -10,6 +10,7 @@ import (
 type Config struct {
 	SeedPath string `json:"seedPath"`
 	SeedBuffer int `json:"seedBuffer"`
+	SleepSeconds int `json:"sleepSeconds"`
 }
 
 func (config *Config) parseConfig(path string) error {

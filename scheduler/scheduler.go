@@ -37,8 +37,8 @@ func (scheduler Scheduler) Crawl() {
 	for {
 		seed, err := scheduler.queue.Get()
 		if err != nil {
-			log.Println(err.Error())
-			time.Sleep(60 * time.Second)
+			log.Printf("Sleeping for: %d seconds with error: %s\n", config.SleepTime, err.Error())
+			time.Sleep(config.SleepSeconds * time.Second)
 			continue
 		}
 		reader, err := download(seed)
