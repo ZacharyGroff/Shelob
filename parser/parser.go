@@ -36,7 +36,7 @@ func getUrls(tokenizer *html.Tokenizer) ([]url.URL, error) {
 			if isAnchor(token) {
 				url, err := parseAnchorToken(token)
 				if err != nil {
-					return nil, err
+					continue
 				}
 				urls = append(urls, url)
 			}
