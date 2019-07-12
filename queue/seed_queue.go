@@ -57,7 +57,7 @@ func (q SeedQueue) Flush() error {
 			return err
 		}
 
-		fmt.Fprintln(writer, url) 
+		fmt.Fprintln(writer, url.String()) 
 	}
 	
 	return writer.Flush()
