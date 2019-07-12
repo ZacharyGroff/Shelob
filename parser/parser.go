@@ -16,14 +16,29 @@ func NewParser(config *config.Config) *Parser {
 	return &Parser{config}
 }
 
-func (parser Parser) Parse(reader io.Reader) ([]url.URL, error) {
+func (parser Parser) Parse(reader io.Reader, parent url.URL) ([]url.URL, error) {
 	tokenizer := html.NewTokenizer(reader)
 	urls, err := getUrls(tokenizer)
 	if err != nil {
 		return nil, err
 	}
+	urls = fillInPartialLinks(urls, parent)
 
 	return urls, nil
+}
+
+func fillInPartialLinks(urls []url.URL, parent url.URL) []url.URL {
+	var completeUrls []url.URL
+	for _, url := range urls {
+		if isMissingHostname(url) {
+			url.Host = parent.Host
+		}
+		if isMissingScheme(url) {
+			url.Scheme = parent.Scheme
+		}
+		completeUrls = append(completeUrls, url)
+	}
+	return completeUrls
 }
 
 func getUrls(tokenizer *html.Tokenizer) ([]url.URL, error) {
@@ -47,6 +62,14 @@ func getUrls(tokenizer *html.Tokenizer) ([]url.URL, error) {
 	err := fmt.Errorf("Reached end of tokenenizer without ErrorToken. Tokenizer: %+v\n", tokenizer)
 
 	return nil, err
+}
+
+func isMissingHostname(url url.URL) bool {
+	return url.Host == ""
+}
+
+func isMissingScheme(url url.URL) bool {
+	return url.Scheme == ""
 }
 
 func isAnchor(token html.Token) bool {
