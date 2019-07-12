@@ -52,8 +52,13 @@ func (scheduler Scheduler) Crawl() {
 			log.Println(err.Error())
 			continue
 		}
-		for _, childUrl := range childUrls {
-			scheduler.queue.Put(childUrl)
+		for _, childUrl := range childUrls { 
+			err := scheduler.queue.Put(childUrl)
+			if err != nil {
+				log.Println("Queue full. Flushing...")
+				scheduler.queue.Flush()
+				scheduler.queue.Put(childUrl)
+			}
 		}
 	}
 }
