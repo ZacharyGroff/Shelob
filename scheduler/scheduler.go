@@ -37,9 +37,7 @@ func (scheduler Scheduler) Crawl() {
 	for {
 		seed, err := scheduler.queue.Get()
 		if err != nil {
-			seconds := scheduler.config.SleepSeconds
-			log.Printf("Sleeping for: %d seconds with error: %s\n", seconds, err.Error())
-			time.Sleep(time.Duration(seconds) * time.Second)
+			scheduler.sleep()
 			continue
 		}
 		reader, err := download(seed)
@@ -52,13 +50,23 @@ func (scheduler Scheduler) Crawl() {
 			log.Println(err.Error())
 			continue
 		}
-		for _, childUrl := range childUrls { 
-			err := scheduler.queue.Put(childUrl)
-			if err != nil {
-				log.Println("Queue full. Flushing...")
-				scheduler.queue.Flush()
-				scheduler.queue.Put(childUrl)
-			}
+		scheduler.updateQueue(childUrls)
+	}
+}
+
+func (scheduler Scheduler) sleep() {
+	seconds := scheduler.config.SleepSeconds
+	log.Printf("No urls in queue... sleeping for: %d seconds.\n", seconds)
+	time.Sleep(time.Duration(seconds) * time.Second)
+}
+
+func (scheduler Scheduler) updateQueue(urls []url.URL) {
+	for _, url := range urls { 
+		err := scheduler.queue.Put(url)
+		if err != nil {
+			log.Println("Queue full. Flushing...")
+			scheduler.queue.Flush()
+			scheduler.queue.Put(url)
 		}
 	}
 }
@@ -83,10 +91,8 @@ func (scheduler Scheduler) loadInitialSeeds() error {
 		return err
 	}
 
-	for _, seed := range initialSeeds {
-		scheduler.queue.Put(seed)
-	}
-
+	scheduler.updateQueue(initialSeeds)
+	
 	return nil
 }
 
