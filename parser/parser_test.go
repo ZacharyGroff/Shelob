@@ -9,6 +9,34 @@ import (
 	"golang.org/x/net/html"
 )
 
+func TestParseCorrectUrl(t *testing.T) {
+	expectedUrl, _ := url.Parse("https://test.com/test/path.html")
+	expected := expectedUrl.String()
+
+	htm := `<!DOCTYPE html>
+	<html>
+	<head>
+    	<title></title>
+	</head>
+	<body>
+    	body content
+    	<p>more <a href="/test/path.html">content</a></p>
+	</body>
+	</html>`
+	
+	body := []byte(htm)
+	reader := bytes.NewReader(body)
+	parent, _ := url.Parse("https://test.com/")
+	
+	parser := Parser{}
+	urls := parser.Parse(reader, *parent)
+	actual := urls[0].String()
+
+	if expected != actual {
+		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
+	}
+}
+
 func TestParseAnchorTokenSuccess(t *testing.T) {
 	token := html.Token{
 		html.StartTagToken,
