@@ -53,7 +53,7 @@ func TestFillInPartialLinks(t *testing.T) {
 	}
 }
 
-func TestGetUrlsPartialLength(t *testing.T) {
+func TestGetUrlsLength(t *testing.T) {
 	expected := 2
 	
 	htm := `<!DOCTYPE html>
@@ -76,5 +76,31 @@ func TestGetUrlsPartialLength(t *testing.T) {
 
 	if expected != actual {
 		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
+	}
+}
+
+func TestGetUrlsCorrectUrl(t *testing.T) {
+	expectedUrl, _ := url.Parse("https://test.com/test/path.html")
+	expected := expectedUrl.String()
+
+	htm := `<!DOCTYPE html>
+	<html>
+	<head>
+    	<title></title>
+	</head>
+	<body>
+    	body content
+    	<p>more <a href="https://test.com/test/path.html">content</a></p>
+	</body>
+	</html>`
+	
+	body := []byte(htm)
+	reader := bytes.NewReader(body)
+	tokenizer := html.NewTokenizer(reader)
+	urls := getUrls(tokenizer)
+	actual := urls[0].String()
+
+	if expected != actual {
+		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
 	}
 }
