@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"bytes"
 	"strings"
 	"testing"
 	"net/url"
@@ -49,5 +50,31 @@ func TestFillInPartialLinks(t *testing.T) {
 
 	if strings.Compare(expected, actual) != 0 {
 		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
+	}
+}
+
+func TestGetUrlsPartialLength(t *testing.T) {
+	expected := 2
+	
+	htm := `<!DOCTYPE html>
+	<html>
+	<head>
+    	<title></title>
+	</head>
+	<body>
+    	body content
+    	<p>more <a href="https://tester.com/">content</a></p>
+    	<p>This <a href="/foo"><em>important</em> link <br> to
+	</body>
+	</html>`
+	
+	body := []byte(htm)
+	reader := bytes.NewReader(body)
+	tokenizer := html.NewTokenizer(reader)
+	urls := getUrls(tokenizer)
+	actual := len(urls)
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
 	}
 }
