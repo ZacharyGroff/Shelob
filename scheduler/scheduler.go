@@ -45,11 +45,7 @@ func (scheduler Scheduler) Crawl() {
 			log.Println(err.Error())
 			continue
 		}
-		childUrls, err := urlParser.Parse(reader, seed)
-		if err != nil {
-			log.Println(err.Error())
-			continue
-		}
+		childUrls := urlParser.Parse(reader, seed)
 		scheduler.updateQueue(childUrls)
 	}
 }

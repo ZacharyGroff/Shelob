@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"errors"
 	"io"
 	"fmt"
 	"net/url"
@@ -16,15 +17,12 @@ func NewParser(config *config.Config) *Parser {
 	return &Parser{config}
 }
 
-func (parser Parser) Parse(reader io.Reader, parent url.URL) ([]url.URL, error) {
+func (parser Parser) Parse(reader io.Reader, parent url.URL) []url.URL {
 	tokenizer := html.NewTokenizer(reader)
-	urls, err := getUrls(tokenizer)
-	if err != nil {
-		return nil, err
-	}
+	urls := getUrls(tokenizer)
 	urls = fillInPartialLinks(urls, parent)
 
-	return urls, nil
+	return urls
 }
 
 func fillInPartialLinks(urls []url.URL, parent url.URL) []url.URL {
@@ -41,27 +39,27 @@ func fillInPartialLinks(urls []url.URL, parent url.URL) []url.URL {
 	return completeUrls
 }
 
-func getUrls(tokenizer *html.Tokenizer) ([]url.URL, error) {
+func getUrls(tokenizer *html.Tokenizer) []url.URL {
 	var urls []url.URL
 	for {
 		tokenType := tokenizer.Next()
-		switch {
-		case tokenType == html.StartTagToken:
+		if tokenType == html.ErrorToken {
+			return urls
+		} else if tokenType == html.StartTagToken {
 			token := tokenizer.Token()
-			if isAnchor(token) {
-				url, err := parseAnchorToken(token)
-				if err != nil {
-					continue
-				}
+			url, err := getUrl(token)
+			if err == nil {
 				urls = append(urls, url)
 			}
-		case tokenType == html.ErrorToken:
-			return urls, nil
 		}
 	}
-	err := fmt.Errorf("Reached end of tokenenizer without ErrorToken. Tokenizer: %+v\n", tokenizer)
+}
 
-	return nil, err
+func getUrl(token html.Token) (url.URL, error) {
+	if isAnchor(token) {
+		return parseAnchorToken(token)
+	}
+	return url.URL{}, errors.New("Unhandled tag token reached.")
 }
 
 func isMissingHostname(url url.URL) bool {
@@ -86,7 +84,7 @@ func parseAnchorToken(token html.Token) (url.URL, error) {
 			return *u, nil
 		}
 	}
-
 	err := fmt.Errorf("Attempted to parse anchor token with no href. Token: %+v\n", token)
+
 	return url.URL{}, err
 }
