@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"bytes"
 	"strings"
 	"testing"
@@ -38,7 +39,7 @@ func TestParseAnchorTokenFailure(t *testing.T) {
 	}
 }
 
-func TestFillInPartialLinks(t *testing.T) {
+func TestFillInPartialLinksCorrectLink(t *testing.T) {
 	expectedUrl, _ := url.Parse("https://parent.com/test/path")
 	expected := expectedUrl.String()
 
@@ -102,5 +103,36 @@ func TestGetUrlsCorrectUrl(t *testing.T) {
 
 	if expected != actual {
 		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
+	}
+}
+
+func TestGetUrlSuccess(t *testing.T) {
+	htm := `<a href="https://test.com/test/path.html">`
+	
+	body := []byte(htm)
+	reader := bytes.NewReader(body)
+	tokenizer := html.NewTokenizer(reader)
+	tokenizer.Next()
+	token := tokenizer.Token()
+	_, err := getUrl(token)
+
+	if err != nil {
+		fmt.Println(err)
+		t.Errorf("Expected nil but error returned.")
+	}
+}
+
+func TestGetUrlError(t *testing.T) {
+	htm := `<body>test content</body>`
+	
+	body := []byte(htm)
+	reader := bytes.NewReader(body)
+	tokenizer := html.NewTokenizer(reader)
+	tokenizer.Next()
+	token := tokenizer.Token()
+	_, err := getUrl(token)
+
+	if err == nil {
+		t.Errorf("Expected error but nil returned.")
 	}
 }
