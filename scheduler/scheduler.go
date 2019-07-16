@@ -67,22 +67,13 @@ func (scheduler Scheduler) updateQueue(urls []url.URL) {
 	}
 }
 
-func download(url url.URL) (io.Reader, error) {
-	response, err := http.Get(url.String())
-	if err != nil {
-		return nil, err
-	}
-
-	return response.Body, nil
-}
-
 func (scheduler Scheduler) loadInitialSeeds() error {
 	lines, err := getFileLines(scheduler.config.SeedPath)
 	if err != nil {
 		return err
 	}
 
-	initialSeeds, err := parseFileLines(lines)
+	initialSeeds, err := parseStringsForUrls(lines)
 	if err != nil {
 		return err
 	}
@@ -92,23 +83,45 @@ func (scheduler Scheduler) loadInitialSeeds() error {
 	return nil
 }
 
-func getFileLines(path string) ([]string, error) {
-	file, err := os.Open(path)
+func download(url url.URL) (io.Reader, error) {
+	response, err := http.Get(url.String())
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
 
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+	return response.Body, nil
+}
+
+func getFileLines(path string) ([]string, error) {
+	scanner, err := getScannerFromFile(path)
+	if err != nil {
+		return nil, err
 	}
+	lines := getLinesFromScanner(scanner)
 
 	return lines, nil
 }
 
-func parseFileLines(lines []string) ([]url.URL, error) {
+func getScannerFromFile(path string) (*bufio.Scanner, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return &bufio.Scanner{}, err
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	return scanner, nil
+}
+
+func getLinesFromScanner(scanner *bufio.Scanner) []string {
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines
+}
+
+func parseStringsForUrls(lines []string) ([]url.URL, error) {
 	var urls []url.URL
 	for _, line := range lines {
 		url, err := url.Parse(line)
