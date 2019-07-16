@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 	"net/url"
+	"github.com/ZacharyGroff/Shelob/config"
+	"github.com/ZacharyGroff/Shelob/queue"
 )
 
 func TestParseStringsForUrlsLength(t *testing.T) {
@@ -70,6 +72,45 @@ func TestGetLinesFromScannerCorrectLine(t *testing.T) {
 	scanner := bufio.NewScanner(reader)
 	lines := getLinesFromScanner(scanner)
 	actual := lines[0]
+
+	if expected != actual {
+		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)	
+	}
+}
+
+func TestUpdateQueueLength(t *testing.T) {
+	expected := 2
+	
+	url1, _ := url.Parse("https://test.com")
+	url2, _ := url.Parse("test/path/")
+	urls := []url.URL{*url1, *url2}
+
+	config := config.Config{SeedBuffer: 5}
+	queue := queue.NewSeedQueue(&config)
+
+	scheduler := Scheduler{queue: queue}
+	scheduler.updateQueue(urls)
+	actual := scheduler.queue.Size()
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)	
+	}
+}
+
+func TestUpdateQueueCorrectUrl(t *testing.T) {
+	expectedUrl, _ := url.Parse("https://test.com")
+	expected := expectedUrl.String()
+
+	url1, _ := url.Parse("https://test.com")
+	urls := []url.URL{*url1}
+
+	config := config.Config{SeedBuffer: 5}
+	queue := queue.NewSeedQueue(&config)
+
+	scheduler := Scheduler{queue: queue}
+	scheduler.updateQueue(urls)
+	actualUrl, _ := scheduler.queue.Get()
+	actual := actualUrl.String()
 
 	if expected != actual {
 		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)	
