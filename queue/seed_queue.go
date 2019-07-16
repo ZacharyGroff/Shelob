@@ -19,6 +19,10 @@ func NewSeedQueue(config *config.Config) *SeedQueue {
 	return &SeedQueue{seeds, config}
 }
 
+func (q SeedQueue) Size() int {
+	return len(q.seeds)
+}
+
 func (q SeedQueue) Get() (url.URL, error) {
 	for {
 		select {
