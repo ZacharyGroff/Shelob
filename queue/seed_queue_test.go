@@ -103,3 +103,31 @@ func TestFlushError(t *testing.T) {
 		t.Error("Expected error but nil returned.")
 	}
 }
+
+func TestSizeZero(t *testing.T) {
+	expected := 0
+
+	config := config.Config{SeedBuffer: 5}
+	q := NewSeedQueue(&config)
+	actual := q.Size()
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
+	}
+}
+
+func TestSizeNotZero(t *testing.T) {
+	expected := 2
+
+	config := config.Config{SeedBuffer: 5}
+	q := NewSeedQueue(&config)
+	url, _ := url.Parse("test.com/")
+
+	q.Put(*url)
+	q.Put(*url)
+	actual := q.Size()
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
+	}
+}
