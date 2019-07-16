@@ -1,6 +1,8 @@
 package scheduler
 
 import (
+	"bufio"
+	"strings"
 	"testing"
 	"net/url"
 )
@@ -46,4 +48,30 @@ func TestParseStringsForUrlsError(t *testing.T) {
 	if err == nil {
 		t.Errorf("Expected error but nil returned.")
 	} 
+}
+
+func TestGetLinesFromScannerLength(t *testing.T) {
+	expected := 2
+
+	reader := strings.NewReader("Test\nTest2")
+	scanner := bufio.NewScanner(reader)
+	lines := getLinesFromScanner(scanner)
+	actual := len(lines)
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)	
+	}
+}
+
+func TestGetLinesFromScannerCorrectLine(t *testing.T) {
+	expected := "Test"
+
+	reader := strings.NewReader("Test\nTest2")
+	scanner := bufio.NewScanner(reader)
+	lines := getLinesFromScanner(scanner)
+	actual := lines[0]
+
+	if expected != actual {
+		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)	
+	}
 }
