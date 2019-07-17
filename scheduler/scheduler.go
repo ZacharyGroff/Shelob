@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"io"
 	"time"
+	"io/ioutil"
 	"net/url"
 	"net/http"
 	"github.com/ZacharyGroff/Shelob/config"
@@ -16,10 +17,11 @@ import (
 type Scheduler struct {
 	config *config.Config
 	queue queue.Queue
+	bytesDownloaded uint64
 }
 
 func NewScheduler(c *config.Config, q *queue.SeedQueue) *Scheduler {
-	return &Scheduler{c, q}
+	return &Scheduler{c, q, 0}
 }
 
 func (scheduler Scheduler) Start() {
@@ -45,6 +47,7 @@ func (scheduler Scheduler) Crawl() {
 			log.Println(err.Error())
 			continue
 		}
+		go scheduler.incrementBytesDownloaded(reader)
 		childUrls := urlParser.Parse(reader, seed)
 		scheduler.updateQueue(childUrls)
 	}
@@ -80,6 +83,17 @@ func (scheduler Scheduler) loadInitialSeeds() error {
 
 	scheduler.updateQueue(initialSeeds)
 	
+	return nil
+}
+
+func (scheduler Scheduler) incrementBytesDownloaded(r io.Reader) error {
+	bytes, err := ioutil.ReadAll(r)
+	if err != nil {
+		return err
+	}
+	bytesInReader := uint64(len(bytes))
+	scheduler.bytesDownloaded += bytesInReader
+
 	return nil
 }
 
