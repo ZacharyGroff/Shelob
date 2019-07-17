@@ -47,7 +47,6 @@ func (scheduler Scheduler) Crawl() {
 			log.Println(err.Error())
 			continue
 		}
-		go scheduler.incrementBytesDownloaded(reader)
 		childUrls := urlParser.Parse(reader, seed)
 		scheduler.updateQueue(childUrls)
 	}
@@ -107,32 +106,19 @@ func download(url url.URL) (io.Reader, error) {
 }
 
 func getFileLines(path string) ([]string, error) {
-	scanner, err := getScannerFromFile(path)
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	lines := getLinesFromScanner(scanner)
-
-	return lines, nil
-}
-
-func getScannerFromFile(path string) (*bufio.Scanner, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return &bufio.Scanner{}, err
-	}
 	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
-
-	return scanner, nil
-}
-
-func getLinesFromScanner(scanner *bufio.Scanner) []string {
 	var lines []string
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	return lines
+
+	return lines, nil
 }
 
 func parseStringsForUrls(lines []string) ([]url.URL, error) {
