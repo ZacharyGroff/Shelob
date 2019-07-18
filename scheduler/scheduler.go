@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"bufio"
-	"io"
 	"time"
 	"io/ioutil"
 	"net/url"
@@ -42,12 +41,13 @@ func (scheduler Scheduler) Crawl() {
 			scheduler.sleep()
 			continue
 		}
-		reader, err := download(seed)
+		bytes, err := download(seed)
 		if err != nil {
 			log.Println(err.Error())
 			continue
 		}
-		childUrls := urlParser.Parse(reader, seed)
+		scheduler.incrementBytesDownloaded(bytes)
+		childUrls := urlParser.Parse(bytes, seed)
 		scheduler.updateQueue(childUrls)
 	}
 }
@@ -85,24 +85,19 @@ func (scheduler Scheduler) loadInitialSeeds() error {
 	return nil
 }
 
-func (scheduler Scheduler) incrementBytesDownloaded(r io.Reader) error {
-	bytes, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-	bytesInReader := uint64(len(bytes))
-	scheduler.bytesDownloaded += bytesInReader
-
-	return nil
+func (scheduler Scheduler) incrementBytesDownloaded(bytes []byte) {
+	numBytes := uint64(len(bytes))
+	scheduler.bytesDownloaded += numBytes
 }
 
-func download(url url.URL) (io.Reader, error) {
+func download(url url.URL) ([]byte, error) {
 	response, err := http.Get(url.String())
 	if err != nil {
 		return nil, err
 	}
+	bytes, err := ioutil.ReadAll(response.Body)
 
-	return response.Body, nil
+	return bytes, err
 }
 
 func getFileLines(path string) ([]string, error) {
