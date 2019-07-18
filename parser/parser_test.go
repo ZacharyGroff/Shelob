@@ -25,11 +25,10 @@ func TestParseCorrectUrl(t *testing.T) {
 	</html>`
 	
 	body := []byte(htm)
-	reader := bytes.NewReader(body)
 	parent, _ := url.Parse("https://test.com/")
 	
 	parser := Parser{}
-	urls := parser.Parse(reader, *parent)
+	urls := parser.Parse(body, *parent)
 	actual := urls[0].String()
 
 	if expected != actual {

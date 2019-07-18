@@ -1,8 +1,8 @@
 package parser
 
 import (
+	"bytes"
 	"errors"
-	"io"
 	"fmt"
 	"net/url"
 	"golang.org/x/net/html"	
@@ -17,7 +17,8 @@ func NewParser(config *config.Config) *Parser {
 	return &Parser{config}
 }
 
-func (parser Parser) Parse(reader io.Reader, parent url.URL) []url.URL {
+func (parser Parser) Parse(b []byte, parent url.URL) []url.URL {
+	reader := bytes.NewReader(b)
 	tokenizer := html.NewTokenizer(reader)
 	urls := getUrls(tokenizer)
 	urls = fillInPartialLinks(urls, parent)
