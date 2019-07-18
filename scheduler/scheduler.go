@@ -16,11 +16,11 @@ import (
 type Scheduler struct {
 	config *config.Config
 	queue queue.Queue
-	bytesDownloaded uint64
+	BytesDownloaded *uint64
 }
 
 func NewScheduler(c *config.Config, q *queue.SeedQueue) *Scheduler {
-	return &Scheduler{c, q, 0}
+	return &Scheduler{c, q, new(uint64)}
 }
 
 func (scheduler Scheduler) Start() {
@@ -85,9 +85,9 @@ func (scheduler Scheduler) loadInitialSeeds() error {
 	return nil
 }
 
-func (scheduler Scheduler) incrementBytesDownloaded(bytes []byte) {
+func (scheduler *Scheduler) incrementBytesDownloaded(bytes []byte) {
 	numBytes := uint64(len(bytes))
-	scheduler.bytesDownloaded += numBytes
+	*scheduler.BytesDownloaded += numBytes
 }
 
 func download(url url.URL) ([]byte, error) {
