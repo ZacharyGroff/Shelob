@@ -46,10 +46,14 @@ func (scheduler Scheduler) Crawl() {
 			log.Println(err.Error())
 			continue
 		}
-		scheduler.incrementBytesDownloaded(bytes)
-		childUrls := urlParser.Parse(bytes, seed)
-		scheduler.updateQueue(childUrls)
+		scheduler.update(urlParser, bytes, seed)
 	}
+}
+
+func (scheduler Scheduler) update(p *parser.Parser, b []byte, s url.URL) {
+	scheduler.incrementBytesDownloaded(b)
+	childUrls := p.Parse(b, s)
+	scheduler.updateQueue(childUrls)
 }
 
 func (scheduler Scheduler) sleep() {
