@@ -1,5 +1,6 @@
 {
 	"seedPath": "seeds.txt",
 	"seedBuffer": 1000,
-	"sleepSeconds": 15
+	"sleepSeconds": 15,
+	"informSeconds": 5
 }

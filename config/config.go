@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"log"
+	"time"
 	"io/ioutil"
 )
 
@@ -11,6 +12,7 @@ type Config struct {
 	SeedPath string `json:"seedPath"`
 	SeedBuffer int `json:"seedBuffer"`
 	SleepSeconds int `json:"sleepSeconds"`
+	InformSeconds time.Duration `json:"informSeconds"`
 }
 
 func (config *Config) parseConfig(path string) error {

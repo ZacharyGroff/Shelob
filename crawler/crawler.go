@@ -28,8 +28,7 @@ func (crawler Crawler) Stop() {
 
 func (crawler *Crawler) Inform() {
 	for {
-		bytesDownloaded := *crawler.scheduler.BytesDownloaded
-		log.Printf("Bytes downloaded: %d\n", bytesDownloaded)
-		time.Sleep(15 * time.Second) 
+		log.Printf("Bytes downloaded: %d\n", *crawler.scheduler.BytesDownloaded)
+		time.Sleep(crawler.config.InformSeconds * time.Second) 
 	}
 }
