@@ -49,3 +49,14 @@ func TestParseInformSeconds(t *testing.T) {
 		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
 	}
 }
+
+func TestParseFlushToFile(t *testing.T) {
+	config := Config{}
+	config.parseConfig("conf_test.json")
+	
+	expected := false
+	actual := config.FlushToFile
+	if expected != actual {
+		t.Errorf("Expected: %t\nActual: %t\n", expected, actual)
+	}
+}

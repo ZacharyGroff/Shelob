@@ -2,5 +2,6 @@
 	"seedPath": "seedPathTest",
 	"seedBuffer": 42,
 	"sleepSeconds": 43,
-	"informSeconds": 44
+	"informSeconds": 44,
+	"flushToFile": false
 }
