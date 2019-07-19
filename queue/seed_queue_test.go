@@ -69,12 +69,12 @@ func TestFlushSize(t *testing.T) {
 	
 }
 
-func TestFlushSuccess(t *testing.T) {
+func TestFlushToFileSuccess(t *testing.T) {
 	testPath := "seed_test.txt"
 	f, err := os.Create(testPath)
 	f.Close()
 
-	config := config.Config{testPath, 1, 0, 0, false}
+	config := config.Config{testPath, 1, 0, 0, true}
 	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 
@@ -89,7 +89,7 @@ func TestFlushSuccess(t *testing.T) {
 	os.Remove(testPath)
 }
 
-func TestFlushError(t *testing.T) {
+func TestFlushToFileError(t *testing.T) {
 	testPath := "seed_test.txt"
 
 	config := config.Config{testPath, 1, 0, 0, true}
@@ -101,6 +101,19 @@ func TestFlushError(t *testing.T) {
 	
 	if err == nil {
 		t.Error("Expected error but nil returned.")
+	}
+}
+
+func TestFlushWithoutFileSuccess(t *testing.T) {
+	config := config.Config{"", 1, 0, 0, false}
+	q := NewSeedQueue(&config)
+	url, _ := url.Parse("test.com/")
+
+	q.Put(*url)
+	err := q.Flush()
+	
+	if err != nil {
+		t.Errorf("Unexpected error returned: %s\n", err.Error())
 	}
 }
 

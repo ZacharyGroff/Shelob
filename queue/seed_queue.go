@@ -49,8 +49,8 @@ func (q SeedQueue) Flush() error {
 	if q.config.FlushToFile {
 		return q.flushToFile()
 	}
-	
 	_, err := q.emptyChannel()
+	
 	return err
 }
 
