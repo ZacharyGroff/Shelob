@@ -8,7 +8,7 @@ import (
 )
 
 func TestPutSuccess(t *testing.T) {
-	config := config.Config{"", 1, 0}	
+	config := config.Config{"", 1, 0, 0}	
 	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 	err := q.Put(*url)
@@ -18,7 +18,7 @@ func TestPutSuccess(t *testing.T) {
 }
 
 func TestPutError(t *testing.T) {
-	config := config.Config{"", 0, 0}	
+	config := config.Config{"", 0, 0, 0}	
 	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 	err := q.Put(*url)
@@ -29,7 +29,7 @@ func TestPutError(t *testing.T) {
 
 func TestGetSuccess(t *testing.T) {
 	expected, _ := url.Parse("test.com/")
-	config := config.Config{"", 1, 0}	
+	config := config.Config{"", 1, 0, 0}	
 	q := NewSeedQueue(&config)
 	q.Put(*expected)
 
@@ -40,7 +40,7 @@ func TestGetSuccess(t *testing.T) {
 }
 
 func TestGetError(t *testing.T) {
-	config := config.Config{"", 0, 0}
+	config := config.Config{"", 0, 0, 0}
 	q := NewSeedQueue(&config)
 
 	_, err := q.Get()
@@ -53,7 +53,7 @@ func TestFlushSize(t *testing.T) {
 	testPath := "seed_test.txt"
 	os.Create(testPath)
 
-	config := config.Config{testPath, 1, 0}
+	config := config.Config{testPath, 1, 0, 0}
 	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 
@@ -74,7 +74,7 @@ func TestFlushSuccess(t *testing.T) {
 	f, err := os.Create(testPath)
 	f.Close()
 
-	config := config.Config{testPath, 1, 0}
+	config := config.Config{testPath, 1, 0, 0}
 	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 
@@ -92,7 +92,7 @@ func TestFlushSuccess(t *testing.T) {
 func TestFlushError(t *testing.T) {
 	testPath := "seed_test.txt"
 
-	config := config.Config{testPath, 1, 0}
+	config := config.Config{testPath, 1, 0, 0}
 	q := NewSeedQueue(&config)
 	url, _ := url.Parse("test.com/")
 

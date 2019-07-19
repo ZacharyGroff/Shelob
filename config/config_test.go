@@ -1,8 +1,9 @@
 package config
 
 import (
-	"testing"
 	"strings"
+	"testing"
+	"time"
 )
 
 func TestParseSeedPath(t *testing.T) {
@@ -33,6 +34,17 @@ func TestParseSleepSeconds(t *testing.T) {
 	
 	expected := 43
 	actual := config.SleepSeconds
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
+	}
+}
+
+func TestParseInformSeconds(t *testing.T) {
+	config := Config{}
+	config.parseConfig("conf_test.json")
+	
+	expected := time.Duration(44)
+	actual := config.InformSeconds
 	if expected != actual {
 		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)
 	}
