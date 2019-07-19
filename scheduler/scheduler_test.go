@@ -88,3 +88,33 @@ func TestUpdateQueueCorrectUrl(t *testing.T) {
 		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)	
 	}
 }
+
+func TestIncrementBytesDownloadedCorrect(t *testing.T) {
+	expected := uint64(4)
+	config := config.Config{}
+	queue := queue.NewSeedQueue(&config)
+	scheduler := NewScheduler(&config, queue)
+		
+	bytes := []byte{0x00, 0x01, 0x02, 0x03}
+	scheduler.incrementBytesDownloaded(bytes)
+	actual := *scheduler.BytesDownloaded
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)	
+	}
+}
+
+func TestIncrementBytesDownloadedZero(t *testing.T) {
+	expected := uint64(0)
+	config := config.Config{}
+	queue := queue.NewSeedQueue(&config)
+	scheduler := NewScheduler(&config, queue)
+		
+	var bytes []byte
+	scheduler.incrementBytesDownloaded(bytes)
+	actual := *scheduler.BytesDownloaded
+
+	if expected != actual {
+		t.Errorf("Expected: %d\nActual: %d\n", expected, actual)	
+	}
+}

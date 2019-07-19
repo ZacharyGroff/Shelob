@@ -14,13 +14,13 @@ import (
 )
 
 type Scheduler struct {
+	BytesDownloaded *uint64
 	config *config.Config
 	queue queue.Queue
-	BytesDownloaded *uint64
 }
 
 func NewScheduler(c *config.Config, q *queue.SeedQueue) *Scheduler {
-	return &Scheduler{c, q, new(uint64)}
+	return &Scheduler{new(uint64), c, q}
 }
 
 func (scheduler Scheduler) Start() {
