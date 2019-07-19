@@ -13,6 +13,7 @@ type Config struct {
 	SeedBuffer int `json:"seedBuffer"`
 	SleepSeconds int `json:"sleepSeconds"`
 	InformSeconds time.Duration `json:"informSeconds"`
+	FlushToFile bool `json:"flushToFile"`
 }
 
 func (config *Config) parseConfig(path string) error {

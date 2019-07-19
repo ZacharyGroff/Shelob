@@ -46,6 +46,15 @@ func (q SeedQueue) Put(url url.URL) error {
 }
 
 func (q SeedQueue) Flush() error {
+	if q.config.FlushToFile {
+		return q.flushToFile()
+	}
+	
+	_, err := q.emptyChannel()
+	return err
+}
+
+func (q SeedQueue) flushToFile() error {
 	file, err := os.OpenFile(q.config.SeedPath, os.O_WRONLY, os.ModePerm)
 	if err != nil {
 		return err
@@ -53,16 +62,29 @@ func (q SeedQueue) Flush() error {
 	defer file.Close()
 
 	writer := bufio.NewWriter(file)
+	urls, err := q.emptyChannel()
+	if err != nil {
+		return err
+	}
 
+	for _, url := range urls {
+		fmt.Fprintln(writer, url.String()) 
+	}
+
+	return writer.Flush()
+}
+
+func (q SeedQueue) emptyChannel() ([]url.URL, error) {
 	initialSize := len(q.seeds)
+	var urls []url.URL
 	for i := 0; i < initialSize; i++ {
 		url, err := q.Get()
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		fmt.Fprintln(writer, url.String()) 
+		urls = append(urls, url)
 	}
-	
-	return writer.Flush()
+
+	return urls, nil
 }
