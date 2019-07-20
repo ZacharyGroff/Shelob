@@ -9,15 +9,15 @@ import (
 	"github.com/ZacharyGroff/Shelob/config"
 )
 
-type Parser struct {
+type UrlParser struct {
 	Config *config.Config
 }
 
-func NewParser(config *config.Config) *Parser {
-	return &Parser{config}
+func NewUrlParser(config *config.Config) *UrlParser {
+	return &UrlParser{config}
 }
 
-func (parser Parser) Parse(b []byte, parent url.URL) []url.URL {
+func (urlParser UrlParser) Parse(b []byte, parent url.URL) []url.URL {
 	reader := bytes.NewReader(b)
 	tokenizer := html.NewTokenizer(reader)
 	urls := getUrls(tokenizer)

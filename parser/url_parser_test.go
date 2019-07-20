@@ -27,7 +27,7 @@ func TestParseCorrectUrl(t *testing.T) {
 	body := []byte(htm)
 	parent, _ := url.Parse("https://test.com/")
 	
-	parser := Parser{}
+	parser := UrlParser{}
 	urls := parser.Parse(body, *parent)
 	actual := urls[0].String()
 

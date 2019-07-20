@@ -34,7 +34,7 @@ func (scheduler Scheduler) Start() {
 }
 
 func (scheduler Scheduler) Crawl() {
-	urlParser := parser.NewParser(scheduler.config)
+	urlParser := parser.NewUrlParser(scheduler.config)
 	for {
 		seed, err := scheduler.queue.Get()
 		if err != nil {
@@ -50,7 +50,7 @@ func (scheduler Scheduler) Crawl() {
 	}
 }
 
-func (scheduler Scheduler) update(p *parser.Parser, b []byte, s url.URL) {
+func (scheduler Scheduler) update(p *parser.UrlParser, b []byte, s url.URL) {
 	scheduler.incrementBytesDownloaded(b)
 	childUrls := p.Parse(b, s)
 	scheduler.updateQueue(childUrls)
