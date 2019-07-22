@@ -3,5 +3,6 @@
 	"seedBuffer": 42,
 	"sleepSeconds": 43,
 	"informSeconds": 44,
-	"flushToFile": false
+	"flushToFile": false,
+	"filterKeyword": "filterTest"
 }
