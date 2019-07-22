@@ -3,5 +3,6 @@
 	"seedBuffer": 1000,
 	"sleepSeconds": 15,
 	"informSeconds": 5,
-	"flushToFile": true
+	"flushToFile": true,
+	"filterKeyword": "trump"
 }

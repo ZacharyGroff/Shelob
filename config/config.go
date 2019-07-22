@@ -14,6 +14,7 @@ type Config struct {
 	SleepSeconds int `json:"sleepSeconds"`
 	InformSeconds time.Duration `json:"informSeconds"`
 	FlushToFile bool `json:"flushToFile"`
+	FilterKeyword string `json:"filterKeyword"`
 }
 
 func (config *Config) parseConfig(path string) error {
