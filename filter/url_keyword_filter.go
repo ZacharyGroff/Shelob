@@ -15,7 +15,7 @@ type UrlKeywordFilter struct {
 func (k UrlKeywordFilter) Filter(requestBody []byte) (bool, error) {
 	reader := bytes.NewReader(requestBody)
 	tokenizer := html.NewTokenizer(reader)
-	keyword := k.Config.FilterKeyword
+	keyword := k.Config.UrlFilterKeyword
 	return parseForKeyword(tokenizer, keyword)
 }
 

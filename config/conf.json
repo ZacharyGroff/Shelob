@@ -4,5 +4,5 @@
 	"sleepSeconds": 15,
 	"informSeconds": 5,
 	"flushToFile": true,
-	"filterKeyword": "trump"
+	"urlFilterKeyword": "wikipedia"
 }

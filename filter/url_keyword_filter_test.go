@@ -19,7 +19,7 @@ func TestFilterSuccess(t *testing.T) {
 	</html>`
 	requestBody := []byte(htm)
 	
-	config := config.Config{FilterKeyword: "test"}
+	config := config.Config{UrlFilterKeyword: "test"}
 	filter := UrlKeywordFilter{&config}
 	_, err := filter.Filter(requestBody)
 	
@@ -45,7 +45,7 @@ func TestFilterTrueHref(t *testing.T) {
 	</html>`
 	requestBody := []byte(htm)
 	
-	config := config.Config{FilterKeyword: "test"}
+	config := config.Config{UrlFilterKeyword: "test"}
 	filter := UrlKeywordFilter{&config}
 	actual, _ := filter.Filter(requestBody)
 
@@ -70,7 +70,7 @@ func TestFilterFalseKeywordNotPresent(t *testing.T) {
 	</html>`
 	requestBody := []byte(htm)
 	
-	config := config.Config{FilterKeyword: "test"}
+	config := config.Config{UrlFilterKeyword: "test"}
 	filter := UrlKeywordFilter{&config}
 	actual, _ := filter.Filter(requestBody)
 
@@ -95,7 +95,7 @@ func TestFilterFalseKeywordInContent(t *testing.T) {
 	</html>`
 	requestBody := []byte(htm)
 	
-	config := config.Config{FilterKeyword: "test"}
+	config := config.Config{UrlFilterKeyword: "test"}
 	filter := UrlKeywordFilter{&config}
 	actual, _ := filter.Filter(requestBody)
 

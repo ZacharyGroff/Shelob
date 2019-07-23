@@ -61,12 +61,12 @@ func TestParseFlushToFile(t *testing.T) {
 	}
 }
 
-func TestParseFilterKeyword(t *testing.T) {
+func TestParseUrlFilterKeyword(t *testing.T) {
 	config := Config{}
 	config.parseConfig("conf_test.json")
 	
-	expected := "filterTest"
-	actual := config.FilterKeyword
+	expected := "urlFilterTest"
+	actual := config.UrlFilterKeyword
 	if strings.Compare(expected, actual) != 0 {
 		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
 	}
