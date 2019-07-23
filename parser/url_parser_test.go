@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"bytes"
 	"strings"
 	"testing"
@@ -47,7 +46,7 @@ func TestParseAnchorTokenSuccess(t *testing.T) {
 	}
 	_, err := parseAnchorToken(token)
 	if err != nil {
-		t.Errorf("Expected nil but error returned.")
+		t.Errorf("Unexpected error returned: %s\n", err.Error())
 	}
 }
 
@@ -144,8 +143,7 @@ func TestGetUrlSuccess(t *testing.T) {
 	_, err := getUrl(token)
 
 	if err != nil {
-		fmt.Println(err)
-		t.Errorf("Expected nil but error returned.")
+		t.Errorf("Unexpected error returned: %s\n", err.Error())
 	}
 }
 
