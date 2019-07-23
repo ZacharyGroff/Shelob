@@ -1,17 +1,18 @@
 package filter
 
 import (
+	"fmt"
 	"bytes"
 	"strings"
 	"golang.org/x/net/html"
 	"github.com/ZacharyGroff/Shelob/config"
 )
 
-type KeywordFilter struct {
+type UrlKeywordFilter struct {
 	Config *config.Config
 }
 
-func (k KeywordFilter) Filter(requestBody []byte) (bool, error) {
+func (k UrlKeywordFilter) Filter(requestBody []byte) (bool, error) {
 	reader := bytes.NewReader(requestBody)
 	tokenizer := html.NewTokenizer(reader)
 	keyword := k.Config.FilterKeyword
@@ -25,15 +26,20 @@ func parseForKeyword(t *html.Tokenizer, k string) (bool, error) {
 			return false, nil
 		} else if tokenType == html.StartTagToken {
 			token := t.Token()
-			if containsKeyword(token, k) {
+			if isAnchor(token) && containsKeyword(token, k) {
 				return true, nil
 			}
 		}
 	}
 }
 
+func isAnchor(token html.Token) bool {
+	return token.Data == "a"
+}
+
 func containsKeyword(token html.Token, keyword string) bool {
 	for _, attr := range token.Attr {
+		fmt.Println(attr.Val)
 		if strings.Contains(attr.Val, keyword) {
 			return true
 		}
