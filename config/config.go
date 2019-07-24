@@ -15,6 +15,7 @@ type Config struct {
 	InformSeconds time.Duration `json:"informSeconds"`
 	FlushToFile bool `json:"flushToFile"`
 	UrlFilterKeyword string `json:"urlFilterKeyword"`
+	HtmlFilterKeyword string `json:"htmlFilterKeyword"`
 }
 
 func (config *Config) parseConfig(path string) error {

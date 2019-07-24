@@ -4,5 +4,6 @@
 	"sleepSeconds": 15,
 	"informSeconds": 5,
 	"flushToFile": true,
-	"urlFilterKeyword": "wikipedia"
+	"urlFilterKeyword": "wikipedia",
+	"htmlFilterKeyword": "mario"
 }
