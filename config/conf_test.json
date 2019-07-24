@@ -4,5 +4,6 @@
 	"sleepSeconds": 43,
 	"informSeconds": 44,
 	"flushToFile": false,
-	"urlFilterKeyword": "urlFilterTest"
+	"urlFilterKeyword": "urlFilterTest",
+	"htmlFilterKeyword": "htmlFilterTest"
 }

@@ -71,3 +71,14 @@ func TestParseUrlFilterKeyword(t *testing.T) {
 		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
 	}
 }
+
+func TestParseHtmlFilterKeyword(t *testing.T) {
+	config := Config{}
+	config.parseConfig("conf_test.json")
+	
+	expected := "htmlFilterTest"
+	actual := config.HtmlFilterKeyword
+	if strings.Compare(expected, actual) != 0 {
+		t.Errorf("Expected: %s\nActual: %s\n", expected, actual)
+	}
+}
