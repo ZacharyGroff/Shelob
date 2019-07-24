@@ -16,10 +16,10 @@ func (k UrlKeywordFilter) Filter(requestBody []byte) (bool, error) {
 	reader := bytes.NewReader(requestBody)
 	tokenizer := html.NewTokenizer(reader)
 	keyword := k.Config.UrlFilterKeyword
-	return parseForKeyword(tokenizer, keyword)
+	return parseTokensForKeyword(tokenizer, keyword)
 }
 
-func parseForKeyword(t *html.Tokenizer, k string) (bool, error) {
+func parseTokensForKeyword(t *html.Tokenizer, k string) (bool, error) {
 	for {
 		tokenType := t.Next()
 		if tokenType == html.ErrorToken {
