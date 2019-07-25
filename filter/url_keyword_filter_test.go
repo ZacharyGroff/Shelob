@@ -5,7 +5,7 @@ import (
 	"github.com/ZacharyGroff/Shelob/config"
 )
 
-func TestFilterSuccess(t *testing.T) {
+func TestUrlFilterSuccess(t *testing.T) {
 	htm := `<!DOCTYPE html>
 	<html>
 	<head>
@@ -28,8 +28,7 @@ func TestFilterSuccess(t *testing.T) {
 	}
 }
 
-
-func TestFilterTrueHref(t *testing.T) {
+func TestUrlFilterTrueHref(t *testing.T) {
 	expected := true
 
 	htm := `<!DOCTYPE html>
@@ -54,7 +53,7 @@ func TestFilterTrueHref(t *testing.T) {
 	}
 }
 
-func TestFilterFalseKeywordNotPresent(t *testing.T) {
+func TestUrlFilterFalseKeywordNotPresent(t *testing.T) {
 	expected := false
 
 	htm := `<!DOCTYPE html>
@@ -79,7 +78,7 @@ func TestFilterFalseKeywordNotPresent(t *testing.T) {
 	}
 }
 
-func TestFilterFalseKeywordInContent(t *testing.T) {
+func TestUrlFilterFalseKeywordInContent(t *testing.T) {
 	expected := false
 
 	htm := `<!DOCTYPE html>
